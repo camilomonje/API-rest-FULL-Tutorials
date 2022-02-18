@@ -85,7 +85,7 @@ public class TutorialController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	
 //HttpStatus
 	@DeleteMapping("/tutorials/{id}")
 	public ResponseEntity<String> deleteTutorial(@PathVariable("id") long id) {
@@ -96,6 +96,21 @@ public class TutorialController {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
 	}
+
+	//Delete por titulo
+	@DeleteMapping("/tutorials/title/{title}")
+	public ResponseEntity<String> deleteTutorialByTitle(@PathVariable("title") String title){
+		try {
+			List<Tutorial> tutorials =  tutorialRepository.findByTitle(title);
+			for (Tutorial t: tutorials){
+				tutorialRepository.deleteById(t.getId());
+			}
+			return new ResponseEntity<>("Tutorials delete por Titulo ", HttpStatus.OK);
+		}catch (Exception e){
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+	}
+
 
 	@DeleteMapping("/tutorials")
 	public ResponseEntity<HttpStatus> deleteAllTutorials() {
@@ -111,7 +126,7 @@ public class TutorialController {
 	@GetMapping("/tutorials/published")
 	public ResponseEntity<List<Tutorial>> findByPublished() {
 		try {
-			List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
+			List<Tutorial> tutorials = tutorialRepository.findByPublished(false);
 
 			if (tutorials.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
