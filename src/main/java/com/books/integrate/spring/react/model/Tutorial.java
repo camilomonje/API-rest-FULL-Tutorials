@@ -17,24 +17,24 @@ public class Tutorial {
 	private String description;
 
 	@Column(name = "published")
-	private Boolean published;
+	private boolean published;
+
+	@Column(name = "price")
+	private double price;
 
 	public Tutorial() {
 
 	}
 
-	public Tutorial(String title, String description, boolean published) {
+	public Tutorial(String title, String description, boolean published,double price) {
 		this.title = title;
 		this.description = description;
 		this.published = published;
+		this.price = price;
 	}
 
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
@@ -61,6 +61,14 @@ public class Tutorial {
 	public void setPublished(boolean isPublished) {
 
 		this.published = isPublished;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	@Override

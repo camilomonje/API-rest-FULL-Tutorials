@@ -59,12 +59,27 @@ public class TutorialController {
         }
     }
 
+    //Consultar por precio del curso
+    @GetMapping("/tutorials/price/{price}")
+    public ResponseEntity<List<Tutorial>> getTutorialByPrice(@PathVariable("price") double price) {
+        try {
+            List<Tutorial> tutorials = tutorialRepository.findByPrice(price);
+            if (!tutorials.isEmpty()){
+                return new ResponseEntity<>(tutorials,HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception err){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/tutorials")
     public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
         try {
             Tutorial _tutorial = tutorialRepository
-                    .save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
+                    .save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false, tutorial.getPrice()));
             return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -80,6 +95,7 @@ public class TutorialController {
             _tutorial.setTitle(tutorial.getTitle());
             _tutorial.setDescription(tutorial.getDescription());
             _tutorial.setPublished(tutorial.isPublished());
+            _tutorial.setPrice(tutorial.getPrice());
             return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -97,6 +113,7 @@ public class TutorialController {
                     _tutorial.setTitle(tutorial.getTitle());
                     _tutorial.setDescription(tutorial.getDescription());
                     _tutorial.setPublished(tutorial.isPublished());
+                    _tutorial.setPrice(tutorial.getPrice());
                     tutorialRepository.save(_tutorial);
                 }
 
@@ -109,7 +126,6 @@ public class TutorialController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-
 
     //HttpStatus
     @DeleteMapping("/tutorials/{id}")
@@ -151,7 +167,7 @@ public class TutorialController {
     @GetMapping("/tutorials/published")
     public ResponseEntity<List<Tutorial>> findByPublished() {
         try {
-            List<Tutorial> tutorials = tutorialRepository.findByPublished(false);
+            List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
 
             if (tutorials.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
