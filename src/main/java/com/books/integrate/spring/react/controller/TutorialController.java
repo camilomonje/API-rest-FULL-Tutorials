@@ -116,7 +116,6 @@ public class TutorialController {
                     _tutorial.setPrice(tutorial.getPrice());
                     tutorialRepository.save(_tutorial);
                 }
-
                 return new ResponseEntity<>(HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
